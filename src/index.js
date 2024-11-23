@@ -1,17 +1,40 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { pizzaData } from "./data";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+function App() {
+  return (
+    <div>
+      <h1>Hello React</h1>
+      <Pizza />
+    </div>
+  );
+}
+
+function Pizza() {
+  return (
+    <>
+      {pizzaData.map((pizza) => {
+        const nameForImage = pizza.name.match(/(?:\w+\s)?(\w+)/);
+
+        return (
+          <div key={pizza.name}>
+            <img
+              src={`pizzas/${nameForImage[1].toLowerCase()}.jpg`}
+              alt={nameForImage}
+            />
+            <h2>{pizza.name}</h2>
+            <p>{pizza.ingredients}</p>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
