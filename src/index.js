@@ -22,12 +22,28 @@ function Header() {
 }
 
 function Menu() {
+  // const numPizzas = 0;
+
+  const numPizzas = pizzaData.length;
+
   return (
     <main className="menu">
       <h2>Our menu</h2>
-      {pizzaData.map((pizza) => {
-        return <Pizza key={pizza.name} pizza={pizza} />;
-      })}
+      {numPizzas > 0 ? (
+        <>
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from. All
+            from our stone oven, all organic, all delicious.
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We're still working on our menu. Please come back later :)</p>
+      )}
     </main>
   );
 }
@@ -37,29 +53,45 @@ function Footer() {
   const openHour = 12;
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
-  console.log(isOpen);
 
   return (
     <footer className="footer">
-      {new Date().toLocaleDateString()}. We're currently open
+      {isOpen ? (
+        <Order closeHour={closeHour} />
+      ) : (
+        <p>
+          We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+        </p>
+      )}
     </footer>
   );
 }
 
-function Pizza(props) {
-  const pizzaNameForImage = props.pizza.name.match(/(?:\w+\s)?(\w+)$/);
+function Order(props) {
   return (
-    <div className="pizza">
+    <div className="order">
+      <p>
+        We're open until {props.closeHour}:00. Come visit us or order online.
+      </p>
+      <button className="btn">Order</button>
+    </div>
+  );
+}
+
+function Pizza({ pizzaObj }) {
+  const pizzaNameForImage = pizzaObj.name.match(/(?:\w+\s)?(\w+)$/);
+  return (
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
       <img
         src={`pizzas/${pizzaNameForImage[1].toLowerCase()}.jpg`}
         alt={pizzaNameForImage}
       />
       <div>
-        <h3>{props.pizza.name}</h3>
-        <p>{props.pizza.ingredients}</p>
-        <spa>${props.pizza.price}</spa>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOULD OUT" : "$" + pizzaObj.price}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
